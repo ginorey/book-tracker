@@ -1,12 +1,10 @@
-# 
-#
-# Print menu 
-# Menu will include a list if menu options 
-# Create a main menu function that will control the main menu
-# Then call functions as they are requested by the user
-# Will require a dictionary using id's as the key and book info as values 
-#
-#
+# This library management uses a list of dictionaries to store the books.
+
+# You are able to check out, check in, and check out books.
+
+# You are also able to print all the books in the system regardless of their status (in or out).
+
+# Finally, you are able to search up and book and see its status in the system.
 
 import pprint
 import os
@@ -49,6 +47,7 @@ menu = ' ------ Main Menu ------ \n\n 1. All Books \n 2. Check In \n 3. Check Ou
 #######################################################################################################
 
 
+
 # Printing All Books 
 def menu1():
 
@@ -66,6 +65,7 @@ def menu1():
     # If User Doesn't Go Back We Will Reset to menu1()
     else:
         return menu1()
+
 
 
 # Checking In Books 
@@ -110,6 +110,7 @@ def menu2():
                 return main_menu()
 
 
+
 # Checking out books 
 def menu3():
 
@@ -122,6 +123,9 @@ def menu3():
 
     # Going Back to Main Menu 
     if option == '0':
+        os.system('clear')
+        print('\nReturning, Please Wait')
+        time.sleep(3)
         return main_menu()
 
     else:
@@ -148,12 +152,56 @@ def menu3():
                 return menu3()
 
 
+
 # Looking up books in system and their Status
 def menu4():
+
+    # Starting Menu, Will Print Welcome, Prompt User for ID
     os.system('clear')
+    print('Welcome to the Look-Up Tool\n\nTo Return Enter 0\n\nPlease enter the ID of the Book you would like to search up\n\n')
+    option = input('ID: ')
+    
+    # If user wants to return
+    if option == '0':
+        os.system('clear')
+        print('\nReturning, Please Wait')
+        time.sleep(3)
+        return main_menu()
+    
+    else:
+        
+        id = int(option)
+
+        # Iterate through booksCurrentlyInSystem To Find If Book Is Read To Check Out
+        for books in booksCurrentlyInSystem:
+            if books['ID'] == id:
+                os.system('clear')
+                print(f'Book: {id} is currently ready to check out!')
+                print('\n\nPlease Answer Y or N')
+                goBack = input('\n\nWould you like to check it out?')
+
+                # # If Found, Prompt User If They Want To Check Out
+                # If They Do, We Will Check Out And Go Back To main_menu()
+                if goBack == 'Y':
+                    booksCheckedOut.append(books)
+                    booksCurrentlyInSystem.remove(books)
+                    os.system('clear')
+                    print(f'\nID: {id} has been checked out.')
+                    print('\n\nThank you, please wait.\n')
+                    time.sleep(3)
+                    return main_menu()
+        
+        # If Book Is Checked Out, It Will Take You Back To menu4()
+        for books in booksCheckedOut:
+            if books['ID'] == id:
+                os.system('clear')
+                print(f'Sorry, Book: {id} is currently checked out.')
+                print('\n\nReturning, Please Wait')
+                return menu4()
 
 
-# This is the main menu for CLI
+
+# This Is The Main Menu 
 def main_menu():
     
     # Clear Screen, Print the Main Menu, and Prompt user for Option.
